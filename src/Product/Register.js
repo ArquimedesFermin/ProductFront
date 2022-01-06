@@ -25,7 +25,7 @@ import MuiAlert from "@mui/material/Alert";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -324,4 +324,4 @@ const Register = ({}) => {
     </>
   );
 };
-export default Register;
+export default Register;s
