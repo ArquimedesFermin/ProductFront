@@ -14,12 +14,12 @@ import {
   GetUpdate,
   UpdateProduct,
   DeleteProduct,
-} from "./Http/Request";
+} from "./Http/RequestProduct";
 import { useFormik } from "formik";
 import Paper from "@mui/material/Paper";
-import { GetColorAll } from "../Color/Http/Request";
-import { GetModelAll } from "../Model/Http/Request";
-import { GetProductoTypeAll } from "../ProductType/Http/Request";
+import { GetColorAll } from "../Color/Http/RequestColor";
+import { GetModelAll } from "../Model/Http/RequestModel";
+import { GetProductoTypeAll } from "../ProductType/Http/RequestProductType";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import * as Yup from "yup";
@@ -324,4 +324,4 @@ const Register = ({}) => {
     </>
   );
 };
-export default Register;s
+export default Register;

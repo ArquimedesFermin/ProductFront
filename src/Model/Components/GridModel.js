@@ -1,0 +1,157 @@
+import React, { useEffect, useState } from "react";
+import Paper from "@mui/material/Paper";
+import { makeStyles } from "@mui/styles";
+import { GetModelGrid, DeleteModel } from "../Http/RequestModel";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import Pagination from "@mui/material/Pagination";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
+const useStyle = makeStyles({
+  pageContent: {
+    margin: 40,
+    padding: 24,
+  },
+  model: {
+    margin: 17,
+    padding: 24,
+  },
+});
+
+const GridModel = ({ SetId }) => {
+  const classes = useStyle();
+  const [model, setModel] = useState([]);
+  const [rows, setRows] = useState(2);
+  const [idModel, setIdModel] = useState(0);
+  const [idDelete, setIdDelete] = useState(0);
+  const [pagination, setPagination] = useState({
+    PageNumber: 1,
+    PageSize: 5,
+  });
+
+  async function GetModelP($pag) {
+    const { data } = await GetModelGrid($pag);
+    console.log(data.result);
+    setModel(data.result);
+  }
+
+  async function DeleteMod($id) {
+    await DeleteModel($id);
+  }
+
+  const handleDelete = ($id) => {
+    setIdDelete($id);
+  };
+
+  const changeRows = (e) => {
+    setRows(e.target.value);
+    setPagination((row) => ({ ...row, PageSize: e.target.value }));
+  };
+
+  const handleChange = (event, value) => {
+    setPagination((pagi) => ({ ...pagi, PageNumber: value }));
+  };
+
+  const SetValue = ($id) => {
+    setIdModel($id);
+  };
+
+  useEffect(() => {
+    GetModelP(pagination);
+  }, [pagination]);
+
+  useEffect(() => {
+    SetId(idModel);
+  }, [idModel]);
+
+  useEffect(() => {
+    DeleteMod(idDelete);
+  }, [idDelete]);
+
+  return (
+    <Paper className={classes.pageContent}>
+      <h1>Listas de modelos</h1>
+      <FormControl sx={{ m: 1, minWidth: 80 }}>
+        <InputLabel id="demo-simple-select-autowidth-label">Rows</InputLabel>
+        <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={rows}
+          onChange={changeRows}
+          autoWidth
+          label="Rows"
+        >
+          <MenuItem value={2}>2</MenuItem>
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={20}>20</MenuItem>
+        </Select>
+      </FormControl>
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              <TableCell>{"Modelo"}</TableCell>
+              <TableCell>{"Marca"}</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {model.map((rows, key) => {
+              return (
+                <TableRow key={rows.id}>
+                  <TableCell>{rows.model}</TableCell>
+                  <TableCell>{rows.marca}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => {
+                        SetValue(rows.id);
+                      }}
+                      aria-label="delete"
+                      size="large"
+                    >
+                      <EditIcon />
+                    </IconButton>
+
+                    <IconButton
+                      onClick={() => {
+                        handleDelete(rows.id);
+                      }}
+                      aria-label="delete"
+                      size="large"
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <div
+        style={{
+          marginTop: 13,
+        }}
+      >
+        <Pagination
+          count={50}
+          page={pagination.PageNumber}
+          onChange={handleChange}
+        />
+      </div>
+    </Paper>
+  );
+};
+
+export default GridModel;
