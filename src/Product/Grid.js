@@ -27,6 +27,10 @@ const useStyle = makeStyles({
     margin: 40,
     padding: 24,
   },
+  model:{
+    margin: 17,
+    padding: 24,
+  }
 });
 
 const style = {
@@ -34,9 +38,10 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  width: "570px",
+  height: "338px",
+  borderRadius: "9px 9px 9px 9px",
   boxShadow: 24,
   p: 4,
 };
@@ -93,8 +98,29 @@ const Grid = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div>
-          <hr></hr>
+          <div style={{fontFamily: 'system-ui'}}>
+          <Paper elevation={1} className={classes.model}>
+
+            <Typography variant="h6" gutterBottom component="div">
+              Price: ${1563.0}
+            </Typography>
+            <Typography variant="h6" gutterBottom component="div">
+              Stock: {25}
+            </Typography>
+            <Typography variant="h6" gutterBottom component="div">
+              Size: {15}
+            </Typography>
+            </Paper>
+            <div
+              style={{
+                background: "#ff0000",
+                width: 63,
+                height: 38,
+                borderRadius: "22px 22px 22px 22px",
+                marginTop: 34
+              }}
+            ></div>
+            <hr style={{ marginTop: 13 }}></hr>
             <FormControl component="fieldset">
               <RadioGroup row name="row-radio-buttons-group">
                 {color.map((rows, key) => {
