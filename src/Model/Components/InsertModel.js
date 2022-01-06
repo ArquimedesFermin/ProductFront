@@ -8,12 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Stack from "@mui/material/Stack";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
-import {
-  InsertModelR,
-  GetModelById,
-  UpdateModel,
-  DeleteModel,
-} from "../Http/RequestModel";
+import { InsertModelR, GetModelById, UpdateModel } from "../Http/RequestModel";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Snackbar from "@mui/material/Snackbar";
@@ -38,15 +33,16 @@ const useStyle = makeStyles({
   },
 });
 
-const InsertModel = ({ Id }) => {
+const InsertModel = ({ Id, setChange, change }) => {
   const classes = useStyle();
   const [obj, setObj] = useState({ Id: 0, Name: "", IdMark: 0 });
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [result, setResult] = useState("");
   const [msj, setMsj] = useState("");
   const [mark, setMark] = useState([]);
-  const [id, setId] = useState(0);
   const [upd, setUpd] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [cng, setCng] = useState(true);
 
   async function GetMark() {
     const { data } = await GetMarkAll();
@@ -69,10 +65,22 @@ const InsertModel = ({ Id }) => {
         ...obj,
         Id: 0,
         Name: "",
-        IdMark: 1,
+        IdMark: 0,
       }));
     }
   }
+
+  const ClearField = () => {
+    setObj((obj) => ({
+      ...obj,
+      Id: 0,
+      Name: "",
+      IdMark: 0,
+    }));
+    setUpd(false);
+
+    setIsEdit(false);
+  };
 
   const handleClick = () => {
     setOpen(true);
@@ -95,19 +103,37 @@ const InsertModel = ({ Id }) => {
       IdMark: Yup.number().required("Required"),
     }),
     onSubmit: async (values) => {
-      if (Id !== undefined && Id !== 0) {
+      if (isEdit) {
         var { data } = await UpdateModel(values);
+
+        if (change == true) {
+          setChange(false);
+        } else {
+          setChange(true);
+        }
+
+        ClearField();
       } else {
         var { data } = await InsertModelR(values);
+        if (change == true) {
+          setChange(false);
+        } else {
+          setChange(true);
+        }
+        ClearField();
       }
 
       if (data.statusCode === 200) {
         setResult("success");
-        setMsj("El producto se registro exitosamente");
+        setMsj(
+          `El producto se ${isEdit ? "Actualizo" : "Registro"} exitosamente`
+        );
         handleClick();
       } else {
         setResult("Error");
-        setMsj("El producto no se registro exitosamente");
+        setMsj(
+          `El producto no se ${isEdit ? "Actualizo" : "Registro"} exitosamente`
+        );
         handleClick();
       }
       formik.resetForm();
@@ -119,7 +145,11 @@ const InsertModel = ({ Id }) => {
   }, [""]);
 
   useEffect(() => {
-    GetModelByIdR(Id);
+    console.log(Id);
+    if (Id !== undefined && Id !== 0) {
+      GetModelByIdR(Id);
+      setIsEdit(true);
+    }
   }, [Id]);
 
   return (
@@ -166,8 +196,21 @@ const InsertModel = ({ Id }) => {
                     style={{ left: 6 }}
                     variant="contained"
                   >
-                    {Id !== undefined && Id !== 0 ? "Actualizar" : "Registrar"}
+                    {isEdit ? "Actualizar" : "Registrar"}
                   </Button>
+                  {isEdit ? (
+                    <Button
+                      disabled={!formik.isValid}
+                      type="submit"
+                      style={{ left: 6 }}
+                      variant="contained"
+                      onClick={() => ClearField()}
+                    >
+                      Limpiar
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </Stack>
               </Grid>
             </Grid>

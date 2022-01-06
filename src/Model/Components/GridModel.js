@@ -28,10 +28,10 @@ const useStyle = makeStyles({
   },
 });
 
-const GridModel = ({ SetId }) => {
+const GridModel = ({ SetId, change }) => {
   const classes = useStyle();
   const [model, setModel] = useState([]);
-  const [rows, setRows] = useState(2);
+  const [rows, setRows] = useState(5);
   const [idModel, setIdModel] = useState(0);
   const [idDelete, setIdDelete] = useState(0);
   const [pagination, setPagination] = useState({
@@ -46,7 +46,9 @@ const GridModel = ({ SetId }) => {
   }
 
   async function DeleteMod($id) {
-    await DeleteModel($id);
+    if ($id != 0) {
+      await DeleteModel($id);
+    }
   }
 
   const handleDelete = ($id) => {
@@ -69,6 +71,10 @@ const GridModel = ({ SetId }) => {
   useEffect(() => {
     GetModelP(pagination);
   }, [pagination]);
+
+  useEffect(() => {
+    GetModelP(pagination);
+  }, [change]);
 
   useEffect(() => {
     SetId(idModel);
