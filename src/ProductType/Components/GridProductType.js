@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
-import { GetAll, DeleteM } from "../Http/RequestMark";
+import { GetAllPag, DeleteProductType } from "../Http/RequestProductType";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -28,7 +28,7 @@ const useStyle = makeStyles({
   },
 });
 
-const GridMark = ({ SetId, change }) => {
+const GridColor = ({ SetId, change }) => {
   const classes = useStyle();
   const [model, setModel] = useState([]);
   const [rows, setRows] = useState(5);
@@ -39,16 +39,16 @@ const GridMark = ({ SetId, change }) => {
     PageSize: 5,
   });
 
-  async function GetMarkP($pag) {
-    const { data } = await GetAll($pag);
+  async function GetProductTypeP($pag) {
+    const { data } = await GetAllPag($pag);
     console.log(data.result);
     setModel(data.result);
   }
 
-  async function DeleteMark($id) {
+  async function DeleteColor($id) {
     if ($id != 0) {
-      await DeleteM($id);
-      await GetMarkP(pagination);
+      await DeleteProductType($id);
+      await GetProductTypeP(pagination);
     }
   }
 
@@ -70,11 +70,11 @@ const GridMark = ({ SetId, change }) => {
   };
 
   useEffect(() => {
-    GetMarkP(pagination);
+    GetProductTypeP(pagination);
   }, [pagination]);
 
   useEffect(() => {
-    GetMarkP(pagination);
+    GetProductTypeP(pagination);
   }, [change]);
 
   useEffect(() => {
@@ -82,12 +82,12 @@ const GridMark = ({ SetId, change }) => {
   }, [idModel]);
 
   useEffect(() => {
-    DeleteMark(idDelete);
+    DeleteColor(idDelete);
   }, [idDelete]);
 
   return (
     <Paper className={classes.pageContent}>
-      <h1>Listas de marcas</h1>
+      <h1>Tipos de Productos</h1>
       <FormControl sx={{ m: 1, minWidth: 80 }}>
         <InputLabel id="demo-simple-select-autowidth-label">Rows</InputLabel>
         <Select
@@ -159,4 +159,4 @@ const GridMark = ({ SetId, change }) => {
   );
 };
 
-export default GridMark;
+export default GridColor;

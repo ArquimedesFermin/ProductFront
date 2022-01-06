@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
-import { GetAll, DeleteM } from "../Http/RequestMark";
+import { GetColorPag, DeleteC } from "../Http/RequestColor";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -28,7 +28,7 @@ const useStyle = makeStyles({
   },
 });
 
-const GridMark = ({ SetId, change }) => {
+const GridColor = ({ SetId, change }) => {
   const classes = useStyle();
   const [model, setModel] = useState([]);
   const [rows, setRows] = useState(5);
@@ -39,16 +39,16 @@ const GridMark = ({ SetId, change }) => {
     PageSize: 5,
   });
 
-  async function GetMarkP($pag) {
-    const { data } = await GetAll($pag);
+  async function GetColorP($pag) {
+    const { data } = await GetColorPag($pag);
     console.log(data.result);
     setModel(data.result);
   }
 
-  async function DeleteMark($id) {
+  async function DeleteColor($id) {
     if ($id != 0) {
-      await DeleteM($id);
-      await GetMarkP(pagination);
+      await DeleteC($id);
+      await GetColorP(pagination);
     }
   }
 
@@ -70,11 +70,11 @@ const GridMark = ({ SetId, change }) => {
   };
 
   useEffect(() => {
-    GetMarkP(pagination);
+    GetColorP(pagination);
   }, [pagination]);
 
   useEffect(() => {
-    GetMarkP(pagination);
+    GetColorP(pagination);
   }, [change]);
 
   useEffect(() => {
@@ -82,12 +82,12 @@ const GridMark = ({ SetId, change }) => {
   }, [idModel]);
 
   useEffect(() => {
-    DeleteMark(idDelete);
+    DeleteColor(idDelete);
   }, [idDelete]);
 
   return (
     <Paper className={classes.pageContent}>
-      <h1>Listas de marcas</h1>
+      <h1>Listas de colores</h1>
       <FormControl sx={{ m: 1, minWidth: 80 }}>
         <InputLabel id="demo-simple-select-autowidth-label">Rows</InputLabel>
         <Select
@@ -109,6 +109,7 @@ const GridMark = ({ SetId, change }) => {
           <TableHead>
             <TableRow>
               <TableCell>{"Marca"}</TableCell>
+              <TableCell>{"Codigo Hexadecimal"}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -117,6 +118,7 @@ const GridMark = ({ SetId, change }) => {
               return (
                 <TableRow key={rows.id}>
                   <TableCell>{rows.name}</TableCell>
+                  <TableCell>{rows.hexColor}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => {
@@ -159,4 +161,4 @@ const GridMark = ({ SetId, change }) => {
   );
 };
 
-export default GridMark;
+export default GridColor;

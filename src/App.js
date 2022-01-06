@@ -8,6 +8,10 @@ import Grid from "./Product/Grid";
 import Register from "./Product/Register";
 import ContentModel from "./Model/ContentModel";
 import ContentMark  from './Marks/ContentMark';
+import ContentColor  from './Color/ContentColor';
+import ContentRequestType  from './ProductType/ContentRequestType';
+
+
 
 const App = () => {
   const [state, setState] = useState();
@@ -27,7 +31,8 @@ const App = () => {
           />
           <Route exact path="/Model" element={<ContentModel />} />
           <Route exact path="/Mark" element={<ContentMark />} />
-
+          <Route exact path="/Color" element={<ContentColor />} />
+          <Route exact path="/ProductType" element={<ContentRequestType />} />
         </Routes>
       </Router>
     </div>
