@@ -9,7 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { RegisterProduct, GetUpdate } from "./Http/Request";
+import { RegisterProduct, GetUpdate, UpdateProduct } from "./Http/Request";
 import { useFormik } from "formik";
 import Paper from "@mui/material/Paper";
 import { GetColorAll } from "../Color/Http/Request";
@@ -19,6 +19,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -31,7 +32,6 @@ const useStyle = makeStyles({
       margin: 6,
     },
   },
-
   pageContent: {
     margin: 40,
     padding: 24,
@@ -40,9 +40,9 @@ const useStyle = makeStyles({
 
 const Register = ({}) => {
   const classes = useStyle();
-
   const [color, setColor] = useState([]);
   const [model, setModel] = useState([]);
+  const [upd, setUpd] = useState(false);
   const [objProduct, setObjProduct] = useState({
     Name: "",
     TypeProduct: "",
@@ -57,6 +57,7 @@ const Register = ({}) => {
   const [result, setResult] = useState("");
   const [msj, setMsj] = useState("");
   const paramns = useParams();
+  let navigate = useNavigate();
 
   async function GetColor() {
     var { data } = await GetColorAll();
@@ -70,6 +71,7 @@ const Register = ({}) => {
 
   async function GetUpdateProduct($id) {
     if (paramns.IdProducto !== undefined) {
+      setUpd(true);
       var { data } = await GetUpdate($id);
       setObjProduct((obj) => ({
         ...obj,
@@ -112,7 +114,7 @@ const Register = ({}) => {
   };
 
   const formik = useFormik({
-    enableReinitialize: true,
+    enableReinitialize: upd,
     initialValues: {
       ...objProduct,
     },
@@ -126,7 +128,13 @@ const Register = ({}) => {
       Description: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      var { data } = await RegisterProduct(values);
+      if (paramns.IdProducto !== undefined) {
+        var { data } = await UpdateProduct(paramns.IdProducto, values);
+        setUpd(false);
+        navigate("/");
+      } else {
+        var { data } = await RegisterProduct(values);
+      }
 
       if (data.statusCode === 200) {
         setResult("success");
@@ -156,6 +164,10 @@ const Register = ({}) => {
   useEffect(() => {
     GetUpdateProduct(paramns.IdProducto);
   }, [paramns.IdProducto]);
+
+  useEffect(() => {
+    GetUpdateProduct(paramns.IdProducto);
+  }, [upd]);
 
   return (
     <>
@@ -276,7 +288,7 @@ const Register = ({}) => {
                 style={{ left: 6 }}
                 variant="contained"
               >
-                {paramns.IdProducto == undefined ? "Registrar" : "Actualizar"}
+                {paramns.IdProducto === undefined ? "Registrar" : "Actualizar"}
               </Button>
             </Grid>
           </form>
