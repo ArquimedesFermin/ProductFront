@@ -88,7 +88,7 @@ const Grid = () => {
       }
     }
   }
-
+  
   const handleChange = (value) => {
     setPagination((pagi) => ({ ...pagi, PageNumber: value }));
   };

@@ -1,14 +1,25 @@
 import "./App.css";
-import Grid from "./Product/Grid";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Bar from './Bar'
+import Bar from "./Bar";
+import SideBar from "./SideBar";
+
+import Grid from "./Product/Grid";
+import Register from "./Product/Register";
+
+
+
 const App = () => {
+  const [state, setState] = useState();
+  
   return (
     <div>
       <Router>
-        <Bar/>
+        <Bar setState={setState} />
+        <SideBar open={state} />
         <Routes>
           <Route exact path="/" element={<Grid />} />
+          <Route exact path="/RegistrarProducto" element={<Register />} />
         </Routes>
       </Router>
     </div>
