@@ -22,8 +22,7 @@ const SideBar = ({ open }) => {
             Productos
           </Typography>
         </div>
-
-        <ListItem to="/" button button component={Link}>
+        <ListItem to="/" button  component={Link}>
           Lista de productos
         </ListItem>
         <ListItem to="/RegistrarProducto" button component={Link}>
@@ -31,7 +30,6 @@ const SideBar = ({ open }) => {
         </ListItem>
       </List>
       <Divider />
-
       {/*<List>
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem button key={text}>

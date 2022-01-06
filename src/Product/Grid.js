@@ -21,6 +21,7 @@ import Typography from "@mui/material/Typography";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const useStyle = makeStyles({
   pageContent: {
@@ -209,23 +210,35 @@ const Grid = () => {
                 <TableCell>{"Product"}</TableCell>
                 <TableCell>{"Descrición"}</TableCell>
                 <TableCell>{"Tipo de producto"}</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {product.map((rows, key) => {
                 return (
-                  <TableRow
-                    key={rows.id}
-                    hover
-                    onClick={() => {
-                      handleOpen(rows.model);
-                    }}
-                  >
+                  <TableRow key={rows.id}>
                     <TableCell>{rows.model}</TableCell>
                     <TableCell>{rows.name}</TableCell>
                     <TableCell>{rows.description}</TableCell>
                     <TableCell>{rows.typeProduct}</TableCell>
-                  </TableRow> 
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => {
+                          handleOpen(rows.model);
+                        }}
+                      >
+                        Precio
+                      </Button>
+                      <Button variant="contained" color="success" component={Link}  to={{pathname:`/RegistrarProducto/${rows.id}`, }}>
+                        Editar
+                      </Button>
+                      <Button variant="contained" color="success">
+                        Eliminar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
             </TableBody>

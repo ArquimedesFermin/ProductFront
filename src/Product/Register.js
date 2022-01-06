@@ -9,7 +9,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { RegisterProduct } from "./Http/Request";
+import { RegisterProduct, GetUpdate } from "./Http/Request";
 import { useFormik } from "formik";
 import Paper from "@mui/material/Paper";
 import { GetColorAll } from "../Color/Http/Request";
@@ -18,6 +18,7 @@ import { GetProductoTypeAll } from "../ProductType/Http/Request";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import * as Yup from "yup";
+import { useParams } from "react-router-dom";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -37,15 +38,25 @@ const useStyle = makeStyles({
   },
 });
 
-const Register = () => {
+const Register = ({}) => {
   const classes = useStyle();
 
   const [color, setColor] = useState([]);
   const [model, setModel] = useState([]);
+  const [objProduct, setObjProduct] = useState({
+    Name: "",
+    TypeProduct: "",
+    Color: "",
+    Model: "",
+    Price: 0.0,
+    Stock: 0,
+    Description: "",
+  });
   const [productoType, setProductoType] = useState([]);
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState("");
   const [msj, setMsj] = useState("");
+  const paramns = useParams();
 
   async function GetColor() {
     var { data } = await GetColorAll();
@@ -55,6 +66,33 @@ const Register = () => {
   async function GetModel() {
     var { data } = await GetModelAll();
     setModel(data.result);
+  }
+
+  async function GetUpdateProduct($id) {
+    if (paramns.IdProducto !== undefined) {
+      var { data } = await GetUpdate($id);
+      setObjProduct((obj) => ({
+        ...obj,
+        Color: data.result.color,
+        Description: data.result.description,
+        Model: data.result.model,
+        Name: data.result.name,
+        Price: data.result.price,
+        Stock: data.result.stock,
+        TypeProduct: data.result.typeProduct,
+      }));
+    } else {
+      setObjProduct((obj) => ({
+        ...obj,
+        Color: "",
+        Description: "",
+        Model: "",
+        Name: "",
+        Price: "",
+        Stock: "",
+        TypeProduct: "",
+      }));
+    }
   }
 
   async function GetProductoType() {
@@ -74,14 +112,9 @@ const Register = () => {
   };
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      Name: "",
-      TypeProduct: "",
-      Color: "",
-      Model: "",
-      Price: 0.0,
-      Stock: 0,
-      Description: "",
+      ...objProduct,
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Required"),
@@ -119,6 +152,11 @@ const Register = () => {
   useEffect(() => {
     GetProductoType();
   }, [""]);
+
+  useEffect(() => {
+    GetUpdateProduct(paramns.IdProducto);
+  }, [paramns.IdProducto]);
+
   return (
     <>
       <Paper className={classes.pageContent}>
@@ -238,7 +276,7 @@ const Register = () => {
                 style={{ left: 6 }}
                 variant="contained"
               >
-                Registrar
+                {paramns.IdProducto == undefined ? "Registrar" : "Actualizar"}
               </Button>
             </Grid>
           </form>

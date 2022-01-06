@@ -19,7 +19,8 @@ const App = () => {
         <SideBar open={state} />
         <Routes>
           <Route exact path="/" element={<Grid />} />
-          <Route exact path="/RegistrarProducto" element={<Register />} />
+          <Route exact path="/RegistrarProducto/" element={<Register/>} />
+          <Route exact path="/RegistrarProducto/:IdProducto" element={<Register/>} />
         </Routes>
       </Router>
     </div>
