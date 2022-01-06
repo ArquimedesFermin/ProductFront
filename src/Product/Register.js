@@ -9,7 +9,12 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { RegisterProduct, GetUpdate, UpdateProduct } from "./Http/Request";
+import {
+  RegisterProduct,
+  GetUpdate,
+  UpdateProduct,
+  DeleteProduct,
+} from "./Http/Request";
 import { useFormik } from "formik";
 import Paper from "@mui/material/Paper";
 import { GetColorAll } from "../Color/Http/Request";
@@ -20,6 +25,7 @@ import MuiAlert from "@mui/material/Alert";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Stack from '@mui/material/Stack';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -67,6 +73,11 @@ const Register = ({}) => {
   async function GetModel() {
     var { data } = await GetModelAll();
     setModel(data.result);
+  }
+
+  async function DeleteP() {
+    var { data } = await DeleteProduct(paramns.IdProducto);
+    navigate("/");
   }
 
   async function GetUpdateProduct($id) {
@@ -151,13 +162,7 @@ const Register = ({}) => {
 
   useEffect(() => {
     GetColor();
-  }, [""]);
-
-  useEffect(() => {
     GetModel();
-  }, [""]);
-
-  useEffect(() => {
     GetProductoType();
   }, [""]);
 
@@ -282,14 +287,31 @@ const Register = ({}) => {
               </Grid>
             </Grid>
             <Grid item xs={6} md={8}>
-              <Button
-                disabled={!formik.isValid}
-                type="submit"
-                style={{ left: 6 }}
-                variant="contained"
-              >
-                {paramns.IdProducto === undefined ? "Registrar" : "Actualizar"}
-              </Button>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  disabled={!formik.isValid}
+                  type="submit"
+                  style={{ left: 6 }}
+                  variant="contained"
+                >
+                  {paramns.IdProducto === undefined
+                    ? "Registrar"
+                    : "Actualizar"}
+                </Button>
+
+                {paramns.IdProducto !== undefined ? (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="error"
+                    onClick={DeleteP}
+                  >
+                    Eliminar
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </Stack>
             </Grid>
           </form>
         </div>

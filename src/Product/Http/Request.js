@@ -24,3 +24,8 @@ export async function GetUpdate($id) {
   return await HttpClient.get(`/api/Product/GetUpdate?id=${$id}`);
 }
 
+export async function DeleteProduct($id) {
+  return await HttpClient.delete(`/api/Product/${$id}`);
+}
+
+

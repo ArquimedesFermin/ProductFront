@@ -20,8 +20,10 @@ import Radio from "@mui/material/Radio";
 import Typography from "@mui/material/Typography";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from "@mui/icons-material/Info";
 
 const useStyle = makeStyles({
   pageContent: {
@@ -54,7 +56,6 @@ const Grid = () => {
   const [rows, setRows] = useState(2);
   const [color, setColor] = useState([]);
   const [mjs, setMsj] = useState("");
-
   const [detailRequest, setDetailRequest] = useState({
     Color: "",
     Model: "",
@@ -67,7 +68,7 @@ const Grid = () => {
   });
   const [pagination, setPagination] = useState({
     PageNumber: 1,
-    PageSize: 2,
+    PageSize: 5,
   });
 
   async function GetProduct($pag) {
@@ -110,7 +111,10 @@ const Grid = () => {
     setOpen(true);
   };
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setDetailRequest((obj) => ({ ...obj, Model: "", Color: "" }));
+  };
 
   useEffect(() => {
     GetProduct(pagination);
@@ -221,22 +225,26 @@ const Grid = () => {
                     <TableCell>{rows.name}</TableCell>
                     <TableCell>{rows.description}</TableCell>
                     <TableCell>{rows.typeProduct}</TableCell>
+
                     <TableCell>
-                      <Button
-                        variant="contained"
-                        color="success"
+                      <IconButton
                         onClick={() => {
                           handleOpen(rows.model);
                         }}
+                        aria-label="delete"
+                        size="large"
                       >
-                        Precio
-                      </Button>
-                      <Button variant="contained" color="success" component={Link}  to={{pathname:`/RegistrarProducto/${rows.id}`, }}>
-                        Editar
-                      </Button>
-                      <Button variant="contained" color="success">
-                        Eliminar
-                      </Button>
+                        <InfoIcon />
+                      </IconButton>
+
+                      <IconButton
+                        component={Link}
+                        to={{ pathname: `/RegistrarProducto/${rows.id}` }}
+                        aria-label="delete"
+                        size="large"
+                      >
+                        <EditIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 );
