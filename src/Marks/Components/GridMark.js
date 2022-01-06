@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@mui/styles";
-import { GetModelGrid, DeleteModel } from "../Http/RequestModel";
+import { GetAll, DeleteM } from "../Http/RequestMark";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -28,7 +28,7 @@ const useStyle = makeStyles({
   },
 });
 
-const GridModel = ({ SetId, change }) => {
+const GridMark = ({ SetId, change }) => {
   const classes = useStyle();
   const [model, setModel] = useState([]);
   const [rows, setRows] = useState(5);
@@ -40,14 +40,14 @@ const GridModel = ({ SetId, change }) => {
   });
 
   async function GetModelP($pag) {
-    const { data } = await GetModelGrid($pag);
+    const { data } = await GetAll($pag);
     console.log(data.result);
     setModel(data.result);
   }
 
-  async function DeleteMod($id) {
+  async function DeleteMark($id) {
     if ($id != 0) {
-      await DeleteModel($id);
+      await DeleteM($id);
       await GetModelP(pagination);
     }
   }
@@ -82,12 +82,12 @@ const GridModel = ({ SetId, change }) => {
   }, [idModel]);
 
   useEffect(() => {
-    DeleteMod(idDelete);
+    DeleteMark(idDelete);
   }, [idDelete]);
 
   return (
     <Paper className={classes.pageContent}>
-      <h1>Listas de modelos</h1>
+      <h1>Listas de marcas</h1>
       <FormControl sx={{ m: 1, minWidth: 80 }}>
         <InputLabel id="demo-simple-select-autowidth-label">Rows</InputLabel>
         <Select
@@ -108,7 +108,6 @@ const GridModel = ({ SetId, change }) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell>{"Modelo"}</TableCell>
               <TableCell>{"Marca"}</TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -117,8 +116,7 @@ const GridModel = ({ SetId, change }) => {
             {model.map((rows, key) => {
               return (
                 <TableRow key={rows.id}>
-                  <TableCell>{rows.model}</TableCell>
-                  <TableCell>{rows.marca}</TableCell>
+                  <TableCell>{rows.name}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => {
@@ -161,4 +159,4 @@ const GridModel = ({ SetId, change }) => {
   );
 };
 
-export default GridModel;
+export default GridMark;

@@ -25,7 +25,7 @@ export async function UpdateModel($object) {
 }
 
 export async function DeleteModel($id) {
-  return await HttpClient.delete(`/api/Model/${$id}}`);
+  return await HttpClient.delete(`/api/Model/${$id}`);
 }
 
 

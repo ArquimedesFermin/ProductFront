@@ -4,17 +4,12 @@ import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
 import Stack from "@mui/material/Stack";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import { InsertModelR, GetModelById, UpdateModel } from "../Http/RequestModel";
+import { RegisterMark, GetById, UpdateMark } from "../Http/RequestMark";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import { GetMarkAll } from "../../Marks/Http/RequestMark";
-import MenuItem from "@mui/material/MenuItem";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -33,39 +28,30 @@ const useStyle = makeStyles({
   },
 });
 
-const InsertModel = ({ Id, setChange, change }) => {
+const InsertMark = ({ Id, setChange, change }) => {
   const classes = useStyle();
-  const [obj, setObj] = useState({ Id: 0, Name: "", IdMark: 0 });
+  const [obj, setObj] = useState({ Id: 0, Name: "" });
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState("");
   const [msj, setMsj] = useState("");
-  const [mark, setMark] = useState([]);
   const [upd, setUpd] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [cng, setCng] = useState(true);
 
-  async function GetMark() {
-    const { data } = await GetMarkAll();
-    setMark(data.result);
-  }
-
-  async function GetModelByIdR($id) {
+  async function GetMarkByIdR($id) {
     console.log($id);
     if (Id !== undefined && Id !== 0) {
       setUpd(true);
-      const { data } = await GetModelById($id);
+      const { data } = await GetById($id);
       setObj((obj) => ({
         ...obj,
         Id: $id,
         Name: data.result.name,
-        IdMark: data.result.idMark,
       }));
     } else {
       setObj((obj) => ({
         ...obj,
         Id: 0,
         Name: "",
-        IdMark: 0,
       }));
     }
   }
@@ -74,10 +60,8 @@ const InsertModel = ({ Id, setChange, change }) => {
     setObj({
       Id: 0,
       Name: "",
-      IdMark: 0,
     });
     setUpd(true);
-
     setIsEdit(false);
   };
 
@@ -99,11 +83,10 @@ const InsertModel = ({ Id, setChange, change }) => {
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Required"),
-      IdMark: Yup.number().required("Required"),
     }),
     onSubmit: async (values) => {
       if (isEdit) {
-        var { data } = await UpdateModel(values);
+        var { data } = await UpdateMark(values);
 
         if (change == true) {
           setChange(false);
@@ -113,7 +96,8 @@ const InsertModel = ({ Id, setChange, change }) => {
 
         ClearField();
       } else {
-        var { data } = await InsertModelR(values);
+        console.log(values);
+        var { data } = await RegisterMark(values);
         if (change == true) {
           setChange(false);
         } else {
@@ -140,13 +124,9 @@ const InsertModel = ({ Id, setChange, change }) => {
   });
 
   useEffect(() => {
-    GetMark();
-  }, [""]);
-
-  useEffect(() => {
     console.log(Id);
     if (Id !== undefined && Id !== 0) {
-      GetModelByIdR(Id);
+      GetMarkByIdR(Id);
       setIsEdit(true);
     }
   }, [Id]);
@@ -155,7 +135,7 @@ const InsertModel = ({ Id, setChange, change }) => {
     <>
       <Paper className={classes.pageContent}>
         <div>
-          <h1>Modelos</h1>
+          <h1>Marcas de productos</h1>
           <form className={classes.root} onSubmit={formik.handleSubmit}>
             <Grid container>
               <Grid item xs={6}>
@@ -167,25 +147,6 @@ const InsertModel = ({ Id, setChange, change }) => {
                   onChange={formik.handleChange}
                   value={formik.values.Name}
                 />
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Marca</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={formik.values.IdMark}
-                    label="Marca"
-                    name="IdMark"
-                    onChange={formik.handleChange}
-                  >
-                    {mark.map((rows, key) => {
-                      return (
-                        <MenuItem key={rows.id} value={rows.id}>
-                          {rows.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
               </Grid>
               <Grid item xs={6} md={8}>
                 <Stack direction="row" spacing={2}>
@@ -200,7 +161,7 @@ const InsertModel = ({ Id, setChange, change }) => {
                   {isEdit ? (
                     <Button
                       disabled={!formik.isValid}
-                      type="submit"
+                      //type="submit"
                       style={{ left: 6 }}
                       variant="contained"
                       onClick={() => ClearField()}
@@ -225,4 +186,4 @@ const InsertModel = ({ Id, setChange, change }) => {
   );
 };
 
-export default InsertModel;
+export default InsertMark;

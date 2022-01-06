@@ -7,6 +7,7 @@ import SideBar from "./SideBar";
 import Grid from "./Product/Grid";
 import Register from "./Product/Register";
 import ContentModel from "./Model/ContentModel";
+import ContentMark  from './Marks/ContentMark';
 
 const App = () => {
   const [state, setState] = useState();
@@ -25,6 +26,8 @@ const App = () => {
             element={<Register />}
           />
           <Route exact path="/Model" element={<ContentModel />} />
+          <Route exact path="/Mark" element={<ContentMark />} />
+
         </Routes>
       </Router>
     </div>
