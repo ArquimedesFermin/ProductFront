@@ -11,3 +11,9 @@ export async function GetAll($object) {
 export async function GetColorAll($object) {
   return await HttpClient.get(`/api/Product?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`);
 }
+
+export async function GetDetailPrice($object) {
+  return await HttpClient.get(`/api/Product/GetDetailPriceByColor?color=${$object.Color}&model=${$object.Model}`);
+}
+
+

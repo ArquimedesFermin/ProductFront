@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { makeStyles } from "@mui/styles";
-import { GetAll } from "./Http/Request";
+import { GetAll, GetDetailPrice } from "./Http/Request";
 import Pagination from "@mui/material/Pagination";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -20,17 +20,16 @@ import Radio from "@mui/material/Radio";
 import Typography from "@mui/material/Typography";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
 
 const useStyle = makeStyles({
   pageContent: {
     margin: 40,
     padding: 24,
   },
-  model:{
+  model: {
     margin: 17,
     padding: 24,
-  }
+  },
 });
 
 const style = {
@@ -40,7 +39,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   width: "570px",
-  height: "338px",
+  height: "271px",
   borderRadius: "9px 9px 9px 9px",
   boxShadow: 24,
   p: 4,
@@ -52,7 +51,17 @@ const Grid = () => {
   const [product, setProduct] = useState([]);
   const [rows, setRows] = useState(2);
   const [color, setColor] = useState([]);
-
+  const [mjs, setMsj] = useState("");
+  const [detailRequest, setDetailRequest] = useState({
+    Color: "",
+    Model: "",
+  });
+  const [detail, setDetail] = useState({
+    price: 0,
+    stock: 0,
+    color: "",
+    colorHex: "",
+  });
   const [pagination, setPagination] = useState({
     PageNumber: 1,
     PageSize: 2,
@@ -65,8 +74,20 @@ const Grid = () => {
 
   async function GetColor() {
     const { data } = await GetColorAll();
-    console.log(data.result);
     setColor(data.result);
+  }
+
+  async function GetDColor($detailPrice) {
+    console.log($detailPrice);
+    if ($detailPrice.Model !== "" && $detailPrice.Color !== "") {
+      const { data } = await GetDetailPrice($detailPrice);
+      console.log(data.result);
+      if (data.result !== null) {
+        setDetail(data.result);
+      } else {
+        setMsj(undefined);
+      }
+    }
   }
 
   const handleChange = (event, value) => {
@@ -78,12 +99,25 @@ const Grid = () => {
     setPagination((row) => ({ ...row, PageSize: e.target.value }));
   };
 
-  const handleOpen = () => setOpen(true);
+  function ChangesValueRadioBtn(e) {
+    setMsj("");
+    setDetailRequest((obj) => ({ ...obj, Color: e.target.value }));
+  }
+
+  const handleOpen = ($model) => {
+    setDetailRequest((obj) => ({ ...obj, Model: $model }));
+    setOpen(true);
+  };
+
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
     GetProduct(pagination);
   }, [pagination]);
+
+  useEffect(() => {
+    GetDColor(detailRequest);
+  }, [detailRequest]);
 
   useEffect(() => {
     GetColor();
@@ -98,28 +132,37 @@ const Grid = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div style={{fontFamily: 'system-ui'}}>
-          <Paper elevation={1} className={classes.model}>
-
-            <Typography variant="h6" gutterBottom component="div">
-              Price: ${1563.0}
-            </Typography>
-            <Typography variant="h6" gutterBottom component="div">
-              Stock: {25}
-            </Typography>
-            <Typography variant="h6" gutterBottom component="div">
-              Size: {15}
-            </Typography>
+          <div style={{ fontFamily: "system-ui" }}>
+            {mjs === undefined ? (
+              <h6 style={{ position: "absolute", top: 159 }}>Color agotado</h6>
+            ) : (
+              <div></div>
+            )}
+            {detailRequest.Color === "" ? (
+              <h6 style={{ position: "absolute", top: 159 }}>
+                Por favor, seleccione un color
+              </h6>
+            ) : (
+              <div></div>
+            )}
+            <Paper elevation={1} className={classes.model}>
+              <Typography variant="h6" gutterBottom component="div">
+                Precio: ${detail.price}
+              </Typography>
+              <Typography variant="h6" gutterBottom component="div">
+                Cantidad: {detail.stock}
+              </Typography>
             </Paper>
             <div
               style={{
-                background: "#ff0000",
+                background: detail.colorHex,
                 width: 63,
                 height: 38,
                 borderRadius: "22px 22px 22px 22px",
-                marginTop: 34
+                marginTop: 34,
               }}
             ></div>
+
             <hr style={{ marginTop: 13 }}></hr>
             <FormControl component="fieldset">
               <RadioGroup row name="row-radio-buttons-group">
@@ -130,6 +173,7 @@ const Grid = () => {
                         value={rows.nameColor}
                         control={<Radio />}
                         label={rows.nameColor}
+                        onChange={ChangesValueRadioBtn}
                       />
                     </div>
                   );
@@ -175,7 +219,7 @@ const Grid = () => {
                     key={rows.id}
                     hover
                     onClick={() => {
-                      handleOpen();
+                      handleOpen(rows.model);
                     }}
                   >
                     <TableCell>{rows.model}</TableCell>
