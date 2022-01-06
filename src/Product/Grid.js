@@ -52,6 +52,7 @@ const Grid = () => {
   const [rows, setRows] = useState(2);
   const [color, setColor] = useState([]);
   const [mjs, setMsj] = useState("");
+
   const [detailRequest, setDetailRequest] = useState({
     Color: "",
     Model: "",
@@ -78,10 +79,8 @@ const Grid = () => {
   }
 
   async function GetDColor($detailPrice) {
-    console.log($detailPrice);
     if ($detailPrice.Model !== "" && $detailPrice.Color !== "") {
       const { data } = await GetDetailPrice($detailPrice);
-      console.log(data.result);
       if (data.result !== null) {
         setDetail(data.result);
       } else {
@@ -90,7 +89,7 @@ const Grid = () => {
     }
   }
 
-  const handleChange = (event, value) => {
+  const handleChange = (value) => {
     setPagination((pagi) => ({ ...pagi, PageNumber: value }));
   };
 
