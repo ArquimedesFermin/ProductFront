@@ -20,6 +20,7 @@ import Radio from "@mui/material/Radio";
 import Typography from "@mui/material/Typography";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Button from "@mui/material/Button";
 
 const useStyle = makeStyles({
   pageContent: {
@@ -88,8 +89,8 @@ const Grid = () => {
       }
     }
   }
-  
-  const handleChange = (event,value) => {
+
+  const handleChange = (event, value) => {
     setPagination((pagi) => ({ ...pagi, PageNumber: value }));
   };
 
@@ -207,7 +208,6 @@ const Grid = () => {
                 <TableCell>{"Model"}</TableCell>
                 <TableCell>{"Product"}</TableCell>
                 <TableCell>{"Descrición"}</TableCell>
-                <TableCell>{"Precio"}</TableCell>
                 <TableCell>{"Tipo de producto"}</TableCell>
               </TableRow>
             </TableHead>
@@ -224,9 +224,8 @@ const Grid = () => {
                     <TableCell>{rows.model}</TableCell>
                     <TableCell>{rows.name}</TableCell>
                     <TableCell>{rows.description}</TableCell>
-                    <TableCell>{rows.price}</TableCell>
                     <TableCell>{rows.typeProduct}</TableCell>
-                  </TableRow>
+                  </TableRow> 
                 );
               })}
             </TableBody>
