@@ -9,8 +9,19 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { RegisterProduct, GetAll } from "./Http/Request";
+import { RegisterProduct } from "./Http/Request";
 import { useFormik } from "formik";
+import Paper from "@mui/material/Paper";
+import { GetColorAll } from "../Color/Http/Request";
+import { GetModelAll } from "../Model/Http/Request";
+import { GetProductoTypeAll } from "../ProductType/Http/Request";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import * as Yup from "yup";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const useStyle = makeStyles({
   root: {
@@ -19,19 +30,49 @@ const useStyle = makeStyles({
       margin: 6,
     },
   },
+
+  pageContent: {
+    margin: 40,
+    padding: 24,
+  },
 });
 
 const Register = () => {
   const classes = useStyle();
 
-  useEffect(() => {
-    getAll();
-  }, [""]);
+  const [color, setColor] = useState([]);
+  const [model, setModel] = useState([]);
+  const [productoType, setProductoType] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [result, setResult] = useState("");
+  const [msj, setMsj] = useState("");
 
-  async function getAll() {
-    var product = await GetAll();
-    console.log(product);
+  async function GetColor() {
+    var { data } = await GetColorAll();
+    setColor(data.result);
   }
+
+  async function GetModel() {
+    var { data } = await GetModelAll();
+    setModel(data.result);
+  }
+
+  async function GetProductoType() {
+    var { data } = await GetProductoTypeAll();
+    setProductoType(data.result);
+  }
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const formik = useFormik({
     initialValues: {
       Name: "",
@@ -42,111 +83,173 @@ const Register = () => {
       Stock: 0,
       Description: "",
     },
+    validationSchema: Yup.object({
+      Name: Yup.string().required("Required"),
+      TypeProduct: Yup.string().required("Required"),
+      Color: Yup.string().required("Required"),
+      Model: Yup.string().required("Required"),
+      Price: Yup.number().required("Required"),
+      Stock: Yup.number().required("Required"),
+      Description: Yup.string().required("Required"),
+    }),
     onSubmit: async (values) => {
       var { data } = await RegisterProduct(values);
+
+      if (data.statusCode === 200) {
+        setResult("success");
+        setMsj("El producto se registro exitosamente");
+        handleClick();
+      } else {
+        setResult("Error");
+        setMsj("El producto no se registro exitosamente");
+        handleClick();
+      }
+      formik.resetForm();
     },
   });
 
+  useEffect(() => {
+    GetColor();
+  }, [""]);
+
+  useEffect(() => {
+    GetModel();
+  }, [""]);
+
+  useEffect(() => {
+    GetProductoType();
+  }, [""]);
   return (
-    <div>
-      <h1>Productos</h1>
-      <form className={classes.root} onSubmit={formik.handleSubmit}>
-        <Grid container>
-          <Grid item xs={6}>
-            <TextField
-              name="Name"
-              id="Name"
-              label="Producto"
-              variant="filled"
-              onChange={formik.handleChange}
-              value={formik.values.Name}
-            />
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Tipo de producto
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={formik.values.TypeProduct}
-                label="Tipo de producto"
-                name="TypeProduct"
-                onChange={formik.handleChange}
+    <>
+      <Paper className={classes.pageContent}>
+        <div>
+          <h1>Productos</h1>
+          <form className={classes.root} onSubmit={formik.handleSubmit}>
+            <Grid container>
+              <Grid item xs={6}>
+                <TextField
+                  name="Name"
+                  id="Name"
+                  label="Producto"
+                  variant="filled"
+                  onChange={formik.handleChange}
+                  value={formik.values.Name}
+                />
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Tipo de producto
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={formik.values.TypeProduct}
+                    label="Tipo de producto"
+                    name="TypeProduct"
+                    onChange={formik.handleChange}
+                  >
+                    {productoType.map((rows, key) => {
+                      return (
+                        <MenuItem key={rows.id} value={rows.name}>
+                          {rows.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Color</InputLabel>
+                  <Select
+                    name="Color"
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={formik.values.Color}
+                    label="Color"
+                    onChange={formik.handleChange}
+                  >
+                    {color.map((rows, key) => {
+                      return (
+                        <MenuItem key={rows.id} value={rows.nameColor}>
+                          {rows.nameColor}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Modelos</InputLabel>
+                  <Select
+                    name="Model"
+                    labelId="demo-simple-select-label"
+                    label="Model"
+                    id="demo-simple-select"
+                    value={formik.values.Model}
+                    label="Modelos"
+                    onChange={formik.handleChange}
+                  >
+                    {model.map((rows, key) => {
+                      return (
+                        <MenuItem key={rows.id} value={rows.name}>
+                          {rows.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+                  <InputLabel htmlFor="filled-adornment-amount">
+                    Price
+                  </InputLabel>
+                  <FilledInput
+                    name="Price"
+                    id="filled-adornment-amount"
+                    value={formik.values.Price}
+                    onChange={formik.handleChange}
+                    startAdornment={
+                      <InputAdornment position="start">$</InputAdornment>
+                    }
+                  />
+                </FormControl>
+                <TextField
+                  id="filled-basic"
+                  label="Cant. Existencia"
+                  variant="filled"
+                  name="Stock"
+                  value={formik.values.Stock}
+                  onChange={formik.handleChange}
+                />
+                <TextField
+                  id="filled-basic"
+                  multiline
+                  label="Descripción"
+                  name="Description"
+                  rows={3.9}
+                  variant="filled"
+                  value={formik.values.Description}
+                  onChange={formik.handleChange}
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={6} md={8}>
+              <Button
+                disabled={!formik.isValid}
+                type="submit"
+                style={{ left: 6 }}
+                variant="contained"
               >
-                <MenuItem value={"Calzado"}>Calzado</MenuItem>
-                <MenuItem value={"Embutidos"}>Embutidos</MenuItem>
-                <MenuItem value={"Electronicos"}>Electronicos</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Color</InputLabel>
-              <Select
-                name="Color"
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={formik.values.Color}
-                label="Color"
-                onChange={formik.handleChange}
-              >
-                <MenuItem value={"Azul"}>Azul</MenuItem>
-                <MenuItem value={"Rojo"}>Rojo</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Modelos</InputLabel>
-              <Select
-                name="Model"
-                labelId="demo-simple-select-label"
-                label="Model"
-                id="demo-simple-select"
-                value={formik.values.Model}
-                label="Modelos"
-                onChange={formik.handleChange}
-              >
-                <MenuItem value={"Air Force"}>Air Force</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl fullWidth sx={{ m: 1 }} variant="filled">
-              <InputLabel htmlFor="filled-adornment-amount">Price</InputLabel>
-              <FilledInput
-                name="Price"
-                id="filled-adornment-amount"
-                value={formik.values.Price}
-                onChange={formik.handleChange}
-                startAdornment={
-                  <InputAdornment position="start">$</InputAdornment>
-                }
-              />
-            </FormControl>
-            <TextField
-              id="filled-basic"
-              label="Cant. Existencia"
-              variant="filled"
-              name="Stock"
-              value={formik.values.Stock}
-              onChange={formik.handleChange}
-            />
-            <TextField
-              id="filled-basic"
-              multiline
-              label="Descripción"
-              name="Description"
-              rows={3.9}
-              variant="filled"
-              value={formik.values.Description}
-              onChange={formik.handleChange}
-            />
-          </Grid>
-        </Grid>
-        <Grid item xs={6} md={8}>
-          <Button type="submit" style={{ left: 6 }} variant="contained">
-            Registrar
-          </Button>
-        </Grid>
-      </form>
-    </div>
+                Registrar
+              </Button>
+            </Grid>
+          </form>
+        </div>
+      </Paper>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={result} sx={{ width: "100%" }}>
+          {msj}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 export default Register;
