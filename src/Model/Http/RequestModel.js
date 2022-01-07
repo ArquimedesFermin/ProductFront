@@ -5,15 +5,19 @@ export async function GetModelAll() {
 }
 
 export async function InsertModelR($object) {
-  return await HttpClient.post(`/api/Model`,$object);
+  return await HttpClient.post(`/api/Model`, $object);
 }
 
 export async function GetModel($object) {
-  return await HttpClient.get(`/api/Model?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`);
+  return await HttpClient.get(
+    `/api/Model?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`
+  );
 }
 
 export async function GetModelGrid($object) {
-  return await HttpClient.get(`/api/Model/GetModelGrid?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`);
+  return await HttpClient.get(
+    `/api/Model/GetModelGrid?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`
+  );
 }
 
 export async function GetModelById($id) {
@@ -21,18 +25,9 @@ export async function GetModelById($id) {
 }
 
 export async function UpdateModel($object) {
-  return await HttpClient.put(`/api/Model`,$object);
+  return await HttpClient.put(`/api/Model`, $object);
 }
 
 export async function DeleteModel($id) {
   return await HttpClient.delete(`/api/Model/${$id}`);
 }
-
-
-
-
-
-
-
-
-

@@ -5,11 +5,11 @@ export async function GetColorAll() {
 }
 
 export async function RegistrarColor($Object) {
-  return await HttpClient.post(`/api/Color`,$Object);
+  return await HttpClient.post(`/api/Color`, $Object);
 }
 
 export async function UpdateColor($Object) {
-  return await HttpClient.put(`/api/Color`,$Object);
+  return await HttpClient.put(`/api/Color`, $Object);
 }
 
 export async function GetByIdColor($id) {
@@ -21,7 +21,7 @@ export async function DeleteC($id) {
 }
 
 export async function GetColorPag($object) {
-  return await HttpClient.get(`/api/Color?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`);
+  return await HttpClient.get(
+    `/api/Color?PageNumber=${$object.PageNumber}&PageSize=${$object.PageSize}`
+  );
 }
-
-

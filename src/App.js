@@ -7,11 +7,9 @@ import SideBar from "./SideBar";
 import Grid from "./Product/Grid";
 import Register from "./Product/Register";
 import ContentModel from "./Model/ContentModel";
-import ContentMark  from './Marks/ContentMark';
-import ContentColor  from './Color/ContentColor';
-import ContentRequestType  from './ProductType/ContentRequestType';
-
-
+import ContentMark from "./Marks/ContentMark";
+import ContentColor from "./Color/ContentColor";
+import ContentRequestType from "./ProductType/ContentRequestType";
 
 const App = () => {
   const [state, setState] = useState();

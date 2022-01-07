@@ -145,6 +145,7 @@ const Register = ({}) => {
         navigate("/");
       } else {
         var { data } = await RegisterProduct(values);
+        navigate("/");
       }
 
       if (data.statusCode === 200) {

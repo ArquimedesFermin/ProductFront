@@ -5,7 +5,11 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { RegisterProductType, GetByIdProductType, UpdateProductType } from "../Http/RequestProductType";
+import {
+  RegisterProductType,
+  GetByIdProductType,
+  UpdateProductType,
+} from "../Http/RequestProductType";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Snackbar from "@mui/material/Snackbar";
@@ -30,7 +34,7 @@ const useStyle = makeStyles({
 
 const InsertProductType = ({ Id, setChange, change }) => {
   const classes = useStyle();
-  const [obj, setObj] = useState({ Id: 0, Name: ""});
+  const [obj, setObj] = useState({ Id: 0, Name: "" });
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState("");
   const [msj, setMsj] = useState("");
@@ -126,7 +130,7 @@ const InsertProductType = ({ Id, setChange, change }) => {
   useEffect(() => {
     console.log(Id);
     if (Id !== undefined && Id !== 0) {
-        GetProductTypeByIdR(Id);
+      GetProductTypeByIdR(Id);
       setIsEdit(true);
     }
   }, [Id]);
@@ -147,7 +151,6 @@ const InsertProductType = ({ Id, setChange, change }) => {
                   onChange={formik.handleChange}
                   value={formik.values.Name}
                 />
-               
               </Grid>
               <Grid item xs={6} md={8}>
                 <Stack direction="row" spacing={2}>

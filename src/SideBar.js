@@ -22,7 +22,7 @@ const SideBar = ({ open }) => {
             Productos
           </Typography>
         </div>
-        <ListItem to="/" button  component={Link}>
+        <ListItem to="/" button component={Link}>
           Lista de productos
         </ListItem>
         <ListItem to="/RegistrarProducto" button component={Link}>
@@ -30,16 +30,23 @@ const SideBar = ({ open }) => {
         </ListItem>
       </List>
       <Divider />
-      {/*<List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>*/}
+      <div>
+          <Typography variant="h6" style={{ textAlign: "center" }}>
+            Configuraciones
+          </Typography>
+        </div>
+        <ListItem to="/Color" button component={Link}>
+          Color
+        </ListItem>
+        <ListItem to="/Mark" button component={Link}>
+          Marcas de productos
+        </ListItem>
+        <ListItem to="/Model" button component={Link}>
+          Modelos de productos
+        </ListItem>
+        <ListItem to="/ProductType" button component={Link}>
+          Tipos de productos
+        </ListItem>
     </Box>
   );
 

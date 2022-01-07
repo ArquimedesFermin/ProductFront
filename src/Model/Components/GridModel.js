@@ -87,7 +87,6 @@ const GridModel = ({ SetId, change }) => {
 
   return (
     <Paper className={classes.pageContent}>
-      <h1>Listas de modelos</h1>
       <FormControl sx={{ m: 1, minWidth: 80 }}>
         <InputLabel id="demo-simple-select-autowidth-label">Rows</InputLabel>
         <Select

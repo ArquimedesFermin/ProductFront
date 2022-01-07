@@ -7,7 +7,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { makeStyles } from "@mui/styles";
-import { GetAll, GetDetailPrice } from "./Http/RequestProduct";
+import {
+  GetAll,
+  GetDetailPrice,
+  GetProductByName,
+} from "./Http/RequestProduct";
 import Pagination from "@mui/material/Pagination";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -24,6 +28,8 @@ import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
+import TextField from "@mui/material/TextField";
+import { imageListClasses } from "@mui/material";
 
 const useStyle = makeStyles({
   pageContent: {
@@ -89,6 +95,16 @@ const Grid = () => {
       } else {
         setMsj(undefined);
       }
+    }
+  }
+
+  async function Fiter(e) {
+    if (e.target.value !== "") {
+      const { data } = await GetProductByName(e.target.value);
+      setProduct(data.result);
+    } else {
+      const { data } = await GetAll(pagination);
+      setProduct(data.result);
     }
   }
 
@@ -189,23 +205,40 @@ const Grid = () => {
         </Box>
       </Modal>
       <Paper className={classes.pageContent}>
-        <h1>Listas Productos</h1>
-        <FormControl sx={{ m: 1, minWidth: 80 }}>
-          <InputLabel id="demo-simple-select-autowidth-label">Rows</InputLabel>
-          <Select
-            labelId="demo-simple-select-autowidth-label"
-            id="demo-simple-select-autowidth"
-            value={rows}
-            onChange={changeRows}
-            autoWidth
-            label="Rows"
-          >
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={20}>20</MenuItem>
-          </Select>
-        </FormControl>
+        <h1>Productos</h1>
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1 },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <FormControl sx={{ m: 1, minWidth: 80 }}>
+            <InputLabel id="demo-simple-select-autowidth-label">
+              Rows
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-autowidth-label"
+              id="demo-simple-select-autowidth"
+              value={rows}
+              onChange={changeRows}
+              autoWidth
+              label="Rows"
+            >
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem selected value={5}>5</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={20}>20</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            id="outlined-basic"
+            label="Nombre del producto"
+            variant="outlined"
+            onChange={Fiter}
+          />
+        </Box>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>

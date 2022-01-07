@@ -5,7 +5,11 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { RegistrarColor, GetByIdColor, UpdateColor } from "../Http/RequestColor";
+import {
+  RegistrarColor,
+  GetByIdColor,
+  UpdateColor,
+} from "../Http/RequestColor";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Snackbar from "@mui/material/Snackbar";
