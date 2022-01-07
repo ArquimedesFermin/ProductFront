@@ -99,7 +99,7 @@ const InsertModel = ({ Id, setChange, change }) => {
     },
     validationSchema: Yup.object({
       Name: Yup.string().required("Required"),
-      IdMark: Yup.number().required("Required"),
+      IdMark: Yup.number().min(1).required("Required"),
     }),
     onSubmit: async (values) => {
       if (isEdit) {
