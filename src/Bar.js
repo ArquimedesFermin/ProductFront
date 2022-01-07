@@ -49,10 +49,13 @@ const Bar = ({ setState }) => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Prueba CLARO
+              Prueba técnica de claro  
             </Typography>
+            v1.0 
           </Toolbar>
+        
         </AppBar>
+      
       </Box>
     </div>
   );
